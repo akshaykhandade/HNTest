@@ -10,22 +10,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class postAdapter extends RecyclerView.Adapter<postAdapter.postViewHolder> {
 
 
     private Context context;
-    private List<Items.Response>  itemsList;
+    private List<Datum>  itemsList;
 
 
-    public postAdapter(Context context, List<Items.Response> itemsList) {
+    public postAdapter(Context context, List<Datum> itemsList) {
         this.context = context;
         this.itemsList = itemsList;
     }
 
 
-    public void setMovieList(List<Items.Response> itemsList) {
+    public void setMovieList(List<Datum> itemsList) {
         this.itemsList = itemsList;
         notifyDataSetChanged();
     }
@@ -43,9 +45,14 @@ public class postAdapter extends RecyclerView.Adapter<postAdapter.postViewHolder
     @Override
     public void onBindViewHolder(@NonNull postViewHolder holder, int position) {
 
-        Items.Response items1 = itemsList.get(position);
+        Datum items1 = itemsList.get(position);
 
-        holder.title.setText(items1.getUser_id());
+        holder.title.setText(items1.getEmail());
+
+        Glide.with(context).load(items1.getAvatar()).into(holder.imageView);
+
+
+
 
     }
 

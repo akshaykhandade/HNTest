@@ -1,27 +1,22 @@
 package com.retrofitdemo.com.hntest;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Service;
-import android.content.Intent;
-import android.graphics.Movie;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
      ProgressBar pBar;
      postAdapter adapter;
-    List<Items> itemsList;
+    List<Datum> itemsList;
 
 
     @Override
@@ -49,10 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        getData();
-
-
-
+        //getData();
+        setData();
 
     }
 
@@ -68,12 +61,10 @@ public class MainActivity extends AppCompatActivity {
                         +response.isSuccessful()+" "+response.body());
                 Toast.makeText(MainActivity.this, ""+response.body(), Toast.LENGTH_SHORT).show();
 
-              List<Items.Response>  itemsList = response.body().getResponse();
-
-              Items items = response.body();
+              List<Datum>  itemsList = response.body().getData();
 
 
-                adapter = new postAdapter(getApplicationContext(),items.getResponse());
+                adapter = new postAdapter(getApplicationContext(),itemsList);
 
                 adapter.setMovieList(itemsList);
                 recyclerView.setAdapter(adapter);
@@ -92,15 +83,45 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void setData() {
 
-    class doSome extends Service {
+        RecyclerInterface apiService = ApiClient.getClient().create(RecyclerInterface.class);
+
+        User user= new User(12,"hey akkinenni ", " whats going on bro?");
+
+        Call<User> call = apiService.setUser(user);
 
 
-        @Nullable
-        @Override
-        public IBinder onBind(Intent intent) {
-            return null;
-        }
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(retrofit2.Call<User> call, Response<User> response) {
+
+                if (!response.isSuccessful()){
+                    Toast.makeText(MainActivity.this, "error occurred "+response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                User user1 = response.body();
+
+                Toast.makeText(MainActivity.this, "user1 "+user1, Toast.LENGTH_SHORT).show();
+
+                Log.d("qwerty","onResponse: isSuccessfull: "+response.isSuccessful()
+                        + " response: "+response.body().getId());
+
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<User> call, Throwable t) {
+                Log.d("qwerty","onFailure: "+t);
+            }
+
+        });
+
+
+
+
     }
+
+
 
 }

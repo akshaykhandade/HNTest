@@ -6,7 +6,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient  {
 
 
-    public static String BASE_URL ="http://104.37.185.20/~tech599/tech599.com/";
+    public static String BASE_URL ="https://jsonplaceholder.typicode.com/";
+    //public static String BASE_URL ="https://reqres.in/";
+
     private static Retrofit retrofit;
     public static Retrofit getClient(){
         if(retrofit == null){
